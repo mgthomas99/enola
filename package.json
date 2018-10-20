@@ -1,7 +1,7 @@
 {
   "name": "enola",
   "version": "1.0.0",
-  "description": "Very fast recursive directory deletion",
+  "description": "Very fast directory deletion",
   "main": "build/index.js",
   "author": "George Thomas",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "rm"
   ],
   "bin": {
-    "nuke": "build/bin/nuke.js"
+    "nuke": "./build/bin/nuke.js"
   },
   "scripts": {
     "build": "gulp \"build\"",
