@@ -12,8 +12,9 @@ export function nuke(path: string):
 Promise<void> {
   return new Promise((accept, reject) => {
     rimraf(path, (err) => {
-      if (err) reject(err);
-      else accept();
+      return err
+          ? reject(err)
+          : accept();
     });
   });
 }
