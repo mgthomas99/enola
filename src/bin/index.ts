@@ -2,9 +2,7 @@ import * as log4js from "log4js";
 import * as yargs from "yargs";
 import chalk from "chalk";
 
-import { ErrorInformation } from "../system/error-information";
-
-export function formatError(err: ErrorInformation | Error | string)
+export function formatError(err: Error | string)
 : string {
   const prefix = chalk.bgYellow("Enola");
   const type = chalk.redBright("ERR");
@@ -12,9 +10,9 @@ export function formatError(err: ErrorInformation | Error | string)
   return `${prefix} ${type} ${content}`;
 }
 
-export function getErrorMessage(err: ErrorInformation | Error | string)
+export function getErrorMessage(err: Error | string)
 : string {
-  if (err instanceof Error || typeof err !== "string") {
+  if (err instanceof Error) {
     return err.message;
   }
   return err;
