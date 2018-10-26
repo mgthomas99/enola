@@ -15,7 +15,6 @@ gulp.task("build", function () {
 gulp.task("clean", function () {
   return del([
     "build/",
-    "dist/",
     "log/"
   ]);
 });
@@ -36,4 +35,4 @@ gulp.task("lint:typescript", function () {
 });
 
 gulp.task("lint", ["lint:javascript", "lint:typescript"]);
-gulp.task("default", ["dist"]);
+gulp.task("default", ["build"]);
