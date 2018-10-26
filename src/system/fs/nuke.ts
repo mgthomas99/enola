@@ -1,4 +1,4 @@
-import * as rimraf from "rimraf";
+import * as fs from "fs";
 
 /**
  * Obliterates the file/directory at the specified path.
@@ -8,13 +8,24 @@ import * as rimraf from "rimraf";
  * @return  {Promise<void>}
  *          A `Promise` which is resolved once the item has been destroyed.
  */
-export function nuke(path: string):
-Promise<void> {
+export function nuke(path: string)
+: Promise<void> {
   return new Promise((accept, reject) => {
-    rimraf(path, (err) => {
-      return err
-          ? reject(err)
-          : accept();
+    fs.stat(path, (err, stats) => {
+      if (err) return reject(err);
+      if (stats.isFile()) {
+        //
+      } else if (stats.isDirectory()) {
+        fs.readdir(path, (err2, files) => {
+          if (err2) return reject(err2);
+          const cbs = files.map(x => nuke(x));
+          Promise.all(cbs)
+              .then(() => void accept())
+              .catch((err3) => void reject(err3));
+        });
+      } else {
+        accept();
+      }
     });
   });
 }
