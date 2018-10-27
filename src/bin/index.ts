@@ -1,5 +1,4 @@
 import * as log4js from "log4js";
-import * as yargs from "yargs";
 import chalk from "chalk";
 
 export function formatError(err: Error | string)
@@ -18,7 +17,19 @@ export function getErrorMessage(err: Error | string)
   return err;
 }
 
-export const argv = yargs
-    .parse(process.argv);
+log4js.configure({
+  appenders: {
+    "console": {
+      layout: { type: "colored" },
+      type: "console"
+    }
+  },
+  categories: {
+    "default": {
+      appenders: ["console"],
+      level: "error"
+    }
+  }
+});
 
-export const error_logger = log4js.getLogger("err");
+export const logger = log4js.getLogger("default");
