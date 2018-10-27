@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "fs-extra";
 import * as path from "path";
 
 /**
@@ -9,43 +9,23 @@ import * as path from "path";
  * @return  {Promise<void>}
  *          A `Promise` which is resolved once the item has been destroyed.
  */
-export function nuke(dir: string)
-: Promise<void> {
-  return new Promise((accept, reject) => {
-    fs.stat(dir, (err, stats) => {
-      if (err) {
-        reject(err);
-      } else if (stats.isFile()) {
-        fs.unlink(dir, (err2) => {
-          if (err2) {
-            reject(err2);
-          } else {
-            accept();
-          }
-        });
-      } else if (stats.isDirectory()) {
-        fs.readdir(dir, (err2, files) => {
-          if (err2) return reject(err2);
-          const cbs = files
-              .map(x => path.join(dir, x))
-              .map(x => nuke(x));
-          Promise.all(cbs)
-              .then(() => {
-                fs.rmdir(dir, (err4) => {
-                  if (err4) {
-                    reject(err4);
-                  } else {
-                    accept();
-                  }
-                });
-              })
-              .catch((err3) => void reject(err3));
-        });
-      } else {
-        accept();
-      }
-    });
-  });
+export async function nuke(dir: string, exists = false)
+: (Promise<void>) {
+  if (typeof exists !== "boolean") exists = fs.existsSync(dir);
+  if (! exists) return;
+
+  const stats = await fs.stat(dir);
+
+  if (stats.isDirectory()) {
+    const files = await fs.readdir(dir);
+    const callbacks = files
+        .map(x => path.join(dir, x))
+        .map(x => nuke(x));
+    await Promise.all(callbacks);
+    await fs.rmdir(dir);
+  } else if (stats.isFile()) {
+    await fs.unlink(dir);
+  }
 }
 
 /**
@@ -55,7 +35,7 @@ export function nuke(dir: string)
  * @throws  {Error}
  */
 export function nukeSync(dir: string)
-: never | void {
+: (never | void) {
   const stats = fs.statSync(dir);
   if (stats.isDirectory()) {
     const files = fs.readdirSync(dir);
