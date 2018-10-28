@@ -56,5 +56,7 @@ log4js.configure({
 export const logger = log4js.getLogger();
 
 process.once("beforeExit", function (ev) {
-  log4js.shutdown();
+  log4js.shutdown(function (err) {
+    if (err) throw err;
+  });
 });
