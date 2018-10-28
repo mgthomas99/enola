@@ -1,12 +1,12 @@
-dist/
+.github/
+docs/
 log/
 src/
-.babelrc
+test/
 .editorconfig
+.eslintignore
 .eslintrc
-.gitattributes
 .gitignore
-.npmrc
 gulpfile.js
 tsconfig.json
 tslint.json

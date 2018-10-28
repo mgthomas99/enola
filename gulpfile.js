@@ -1,34 +1,22 @@
-const babel = require("gulp-babel");
-const buffer = require("vinyl-buffer");
 const del = require("del");
 const eslint = require("gulp-eslint");
 const gulp = require("gulp");
 const tslint = require("gulp-tslint");
 const typescript = require("gulp-typescript");
-const uglify = require("gulp-uglify");
 
 const ts_project = typescript.createProject("tsconfig.json");
 
 gulp.task("build", function () {
   return gulp.src("src/**/*.ts")
       .pipe(ts_project())
-      // .pipe(babel())
       .pipe(gulp.dest("build/"));
 });
 
 gulp.task("clean", function () {
   return del([
     "build/",
-    "dist/",
     "log/"
   ]);
-});
-
-gulp.task("dist", ["build"], function () {
-  return gulp.src("build/**/*.js")
-      .pipe(buffer())
-      .pipe(uglify())
-      .pipe(gulp.dest("dist/"));
 });
 
 gulp.task("lint:javascript", function () {
@@ -47,4 +35,4 @@ gulp.task("lint:typescript", function () {
 });
 
 gulp.task("lint", ["lint:javascript", "lint:typescript"]);
-gulp.task("default", ["dist"]);
+gulp.task("default", ["build"]);
