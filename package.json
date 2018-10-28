@@ -25,11 +25,13 @@
     "lint:javascript": "gulp \"lint:javascript\"",
     "lint:typescript": "gulp \"lint:typescript\"",
     "lint": "gulp \"lint\"",
-    "prepack": "npm-run-all \"clean\" \"build\""
+    "prepack": "npm-run-all \"clean\" \"build\"",
+    "test": "mocha \"test/**/*.spec.js\""
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
     "@types/node": "^10.10.1",
+    "@types/tmp": "0.0.33",
     "@types/yargs": "^12.0.1",
     "chai": "^4.2.0",
     "del": "^3.0.0",
@@ -38,8 +40,10 @@
     "gulp-eslint": "^5.0.0",
     "gulp-tslint": "^8.1.3",
     "gulp-typescript": "^5.0.0-alpha.3",
+    "mocha": "^5.2.0",
     "npm-run-all": "^4.1.3",
     "rimraf": "^2.6.2",
+    "tmp": "0.0.33",
     "tslint": "^5.11.0",
     "typescript": "^3.0.3",
     "utf-8-validate": "^5.0.1"
