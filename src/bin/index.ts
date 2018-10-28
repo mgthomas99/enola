@@ -23,19 +23,6 @@ log4js.configure({
             return config.get("pretty")
                 ? chalk.yellow("ENOLA")
                 : "ENOLA";
-          },
-          type(ev: log4js.LoggingEvent)
-          : (log4js.Level | string) {
-            if (! config.get("pretty")) return ev.level;
-
-            const fn: ((msg: string) => string) =
-                ev.level.isGreaterThanOrEqualTo(log4js.levels.ERROR) ? chalk.red :
-                ev.level.isEqualTo(log4js.levels.INFO) ? chalk.bgBlue :
-                ev.level.isEqualTo(log4js.levels.WARN) ? chalk.yellow :
-                undefined;
-            return fn
-                ? fn(ev.level.toString())
-                : ev.level;
           }
         }
       }
