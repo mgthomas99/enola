@@ -16,7 +16,7 @@ log4js.configure({
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `%x{prefix} %x{type}\t %m`,
+        pattern: `%x{prefix} %[%p%]\t %m`,
         tokens: {
           prefix(ev: log4js.LoggingEvent)
           : (string) {
