@@ -2,13 +2,7 @@ import * as log4js from "log4js";
 import * as path from "path";
 import chalk from "chalk";
 
-export function formatError(err: Error | string)
-: (string) {
-  const prefix = chalk.bgYellow("Enola");
-  const type = chalk.redBright("ERR");
-  const content = getErrorMessage(err);
-  return `${prefix} ${type} ${content}`;
-}
+export const config = new Map<string, any>();
 
 export function resolvePath(dir: string)
 : (string) {
@@ -16,25 +10,41 @@ export function resolvePath(dir: string)
   return path.join(cwd, dir);
 }
 
-export function getErrorMessage(err: Error | string)
-: (string) {
-  if (err instanceof Error) {
-    return err.message;
-  }
-  return err;
-}
-
 log4js.configure({
   appenders: {
     "console": {
-      layout: { type: "colored" },
-      type: "console"
+      type: "console",
+      layout: {
+        type: "pattern",
+        pattern: `%x{prefix} %x{type}\t %m`,
+        tokens: {
+          prefix(ev: log4js.LoggingEvent)
+          : (string) {
+            return config.get("pretty")
+                ? chalk.yellow("ENOLA")
+                : "ENOLA";
+          },
+          type(ev: log4js.LoggingEvent)
+          : (log4js.Level | string) {
+            if (! config.get("pretty")) return ev.level;
+
+            const fn: ((msg: string) => string) =
+                ev.level.isGreaterThanOrEqualTo(log4js.levels.ERROR) ? chalk.red :
+                ev.level.isEqualTo(log4js.levels.INFO) ? chalk.bgBlue :
+                ev.level.isEqualTo(log4js.levels.WARN) ? chalk.yellow :
+                undefined;
+            return fn
+                ? fn(ev.level.toString())
+                : ev.level;
+          }
+        }
+      }
     }
   },
   categories: {
     "default": {
       appenders: ["console"],
-      level: "error"
+      level: "all"
     }
   }
 });
