@@ -3,7 +3,6 @@
 import * as yargs from "yargs";
 
 import { nuke } from "../system/fs/nuke";
-import { explode } from "../explode";
 import * as index from "./index";
 
 function cbify(dir: string)
