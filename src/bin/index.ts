@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as log4js from "log4js";
 import * as path from "path";
 import chalk from "chalk";
