@@ -5,7 +5,7 @@ import * as yargs from "yargs";
 import { nuke } from "../system/fs/nuke";
 import * as index from "./index";
 
-function cbify(dir: string)
+export function timedNuke(dir: string)
 : (Promise<{
   elapsed: number;
   path: string;
@@ -41,7 +41,7 @@ index.config.set("silent", argv.silent);
 
 const promises = argv._.slice(2)
     .map(index.resolvePath)
-    .map((dir) => cbify(dir)
+    .map((dir) => timedNuke(dir)
         .then(function (x) {
           const elapsed = x.elapsed.toFixed(12);
           index.logger.info(`Nuked ${dir} in ${elapsed} seconds!`);
