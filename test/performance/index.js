@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const tmp = require("tmp");
 
 module.exports.perf = function (fn) {
   const start = process.hrtime();
@@ -7,18 +7,15 @@ module.exports.perf = function (fn) {
   return elapsed[0] + elapsed[1] * 1e-12;
 };
 
+function run(fn) {
+  const dir = tmp.dirSync();
+  return fn(dir.name);
+}
+
 const nuke = require("./nuke");
 const rimraf = require("./rimraf");
 
-function run(fn, dir) {
-  fs.mkdirSync(dir);
-  return fn(dir);
-}
-
-const perf_rimraf = run(rimraf, "./abc");
-const perf_nuke = run(nuke, "./abc");
-
 console.log(`
-  Nuke:   ${perf_nuke.toFixed(12)}
-  Rimraf: ${perf_rimraf.toFixed(12)}
+  Nuke:   ${run(nuke).toFixed(12)}
+  Rimraf: ${run(rimraf).toFixed(12)}
 `);
