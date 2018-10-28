@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import * as yargs from "yargs";
-
 import { nuke } from "../system/fs/nuke";
 import * as index from "./index";
 
@@ -23,23 +21,7 @@ export function timedNuke(dir: string)
   });
 }
 
-const argv = yargs
-    .boolean("pretty")
-      .alias("pretty", "p")
-      .default("pretty", true)
-      .describe("pretty", "Output styling")
-    .boolean("silent")
-      .alias("silent", "s")
-      .default("silent", false)
-      .describe("silent", "Mute output")
-    .alias("help", "h")
-    .alias("version", "v")
-    .parse(process.argv);
-
-index.config.set("pretty", argv.pretty);
-index.config.set("silent", argv.silent);
-
-const promises = argv._.slice(2)
+const promises = index.argv._.slice(2)
     .map(index.resolvePath)
     .map((dir) => timedNuke(dir)
         .then(function (x) {

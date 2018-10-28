@@ -2,15 +2,28 @@
 
 import * as log4js from "log4js";
 import * as path from "path";
+import * as yargs from "yargs";
 import chalk from "chalk";
-
-export const config = new Map<string, any>();
 
 export function resolvePath(dir: string)
 : (string) {
   const cwd = process.cwd();
   return path.join(cwd, dir);
 }
+
+export const argh = yargs
+    .boolean("pretty")
+      .alias("pretty", "p")
+      .default("pretty", true)
+      .describe("pretty", "Output styling")
+    .boolean("silent")
+      .alias("silent", "s")
+      .default("silent", false)
+      .describe("silent", "Mute output")
+    .alias("help", "h")
+    .alias("version", "v");
+export const argv = argh
+    .parse(process.argv);
 
 log4js.configure({
   appenders: {
@@ -22,7 +35,7 @@ log4js.configure({
         tokens: {
           prefix(ev: log4js.LoggingEvent)
           : (string) {
-            return config.get("pretty")
+            return argv.pretty
                 ? chalk.yellow("ENOLA")
                 : "ENOLA";
           }
@@ -33,9 +46,11 @@ log4js.configure({
   categories: {
     "default": {
       appenders: ["console"],
-      level: "all"
+      level: argv.silent
+          ? log4js.levels.OFF.toString()
+          : log4js.levels.ALL.toString()
     }
   }
 });
 
-export const logger = log4js.getLogger("default");
+export const logger = log4js.getLogger();
