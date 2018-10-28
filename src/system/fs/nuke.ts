@@ -9,13 +9,12 @@ import * as path from "path";
  * @return  {Promise<void>}
  *          A `Promise` which is resolved once the item has been destroyed.
  */
-export async function nuke(dir: string, exists = false)
+export async function nuke(dir: string, exists?: boolean)
 : (Promise<void>) {
   if (typeof exists !== "boolean") exists = fs.existsSync(dir);
   if (! exists) return;
 
   const stats = await fs.stat(dir);
-
   if (stats.isDirectory()) {
     const files = await fs.readdir(dir);
     const callbacks = files
