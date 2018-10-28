@@ -32,6 +32,8 @@ const argv = yargs
       .alias("silent", "s")
       .default("silent", false)
       .describe("silent", "Mute output")
+    .alias("help", "h")
+    .alias("version", "v")
     .parse(process.argv);
 
 index.config.set("pretty", argv.pretty);
