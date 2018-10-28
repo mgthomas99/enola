@@ -5,7 +5,7 @@ import * as path from "path";
 import * as yargs from "yargs";
 import chalk from "chalk";
 
-export function resolvePath(dir: string)
+export function cwdJoin(dir: string)
 : (string) {
   const cwd = process.cwd();
   return path.join(cwd, dir);
@@ -54,3 +54,7 @@ log4js.configure({
 });
 
 export const logger = log4js.getLogger();
+
+process.once("beforeExit", function (ev) {
+  log4js.shutdown();
+});

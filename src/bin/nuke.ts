@@ -22,7 +22,7 @@ export function timedNuke(dir: string)
 }
 
 const promises = index.argv._.slice(2)
-    .map(index.resolvePath)
+    .map((dir) => index.cwdJoin(dir))
     .map((dir) => timedNuke(dir)
         .then(function (x) {
           const elapsed = x.elapsed.toFixed(12);
