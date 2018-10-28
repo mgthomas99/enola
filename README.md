@@ -1,7 +1,7 @@
 [github-repository-url]: https://github.com/mgthomas99/enola
 [npm-package-url]: http://npmjs.com/package/enola
 [npm-package-version-shield-url]: https://img.shields.io/npm/v/enola.svg
-[repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/css-project.svg?style=flat-square
+[repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/enola.svg?style=flat-square
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
 
 # Enola
