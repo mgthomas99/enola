@@ -1,10 +1,12 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
-import { statSafe } from "./stats";
+import * as stat from "./stats";
 
 /**
  * Asynchronously obliterate the file/directory at the specified path.
+ *
+ * If the path does not exist, this function will immediately return.
  *
  * @param   {string}  path
  *          The path of the file/directory to destroy. The path can either be
@@ -14,11 +16,12 @@ import { statSafe } from "./stats";
  *          immediately. This parameter is automatically provided internally
  *          when this function is called recursively.
  * @return  {Promise<void>}
- *          A `Promise` which is resolved once the item has been destroyed.
+ *          A `Promise` which is resolved once the item has been destroyed, or
+ *          rejected if a system error occurs.
  */
 export async function nuke(dir: string)
 : (Promise<void>) {
-  const stats = await statSafe(dir);
+  const stats = await stat.statSafe(dir);
   if (typeof stats === "undefined") {
     return;
   }
@@ -38,6 +41,8 @@ export async function nuke(dir: string)
 /**
  * Obliterate the file/directory at the specified path.
  *
+ * If the path does not exist, this function will immediately return.
+ *
  * @param   {string}  dir
  *          The path of the file/directory to destroy. The path can either be
  *          absolute, or relative to the current working directory.
@@ -46,7 +51,11 @@ export async function nuke(dir: string)
  */
 export function nukeSync(dir: string)
 : (never | void) {
-  const stats = fs.statSync(dir);
+  const stats = stat.statSyncSafe(dir);
+  if  (typeof stats === "undefined") {
+    return;
+  }
+
   if (stats.isDirectory()) {
     const files = fs.readdirSync(dir);
     files
