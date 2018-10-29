@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
-import * as stat from "./stats";
+import * as stat from "./stat";
 
 /**
  * Asynchronously obliterate the file/directory at the specified path.
