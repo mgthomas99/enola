@@ -27,7 +27,7 @@ export const argv = argh
 
 log4js.configure({
   appenders: {
-    "console": {
+    "colour": {
       type: "console",
       layout: {
         type: "pattern",
@@ -35,9 +35,20 @@ log4js.configure({
         tokens: {
           prefix(ev: log4js.LoggingEvent)
           : (string) {
-            return argv.pretty
-                ? chalk.yellow("ENOLA")
-                : "ENOLA";
+            return chalk.yellow("ENOLA");
+          }
+        }
+      }
+    },
+    "plain": {
+      type: "console",
+      layout: {
+        type: "pattern",
+        pattern: `%x{prefix} %p\t %m`,
+        tokens: {
+          prefix(ev: log4js.LoggingEvent)
+          : (string) {
+            return "ENOLA";
           }
         }
       }
@@ -45,7 +56,7 @@ log4js.configure({
   },
   categories: {
     "default": {
-      appenders: ["console"],
+      appenders: [argv.pretty ? "colour" : "plain"],
       level: argv.silent
           ? log4js.levels.OFF.toString()
           : log4js.levels.ALL.toString()
