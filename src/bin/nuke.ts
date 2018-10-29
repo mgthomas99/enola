@@ -26,7 +26,7 @@ const promises = index.argv._.slice(2)
     .map((dir) => timedNuke(dir)
         .then(function (x) {
           const elapsed = x.elapsed.toFixed(12);
-          index.logger.info(`Nuked ${dir} in ${elapsed} seconds!`);
+          index.logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
         }));
 
 Promise.all(promises)
