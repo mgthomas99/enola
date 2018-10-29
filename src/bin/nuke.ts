@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import * as log4js from "log4js";
+
 import { nuke } from "../system/fs/nuke";
 import * as index from "./index";
 
@@ -21,14 +23,24 @@ export function timedNuke(dir: string)
   });
 }
 
-const promises = index.argv._.slice(2)
+const argv = index.argh
+    .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
+    .example("nuke \"./node_modules\"", "")
+    .parse(process.argv);
+
+const logger =
+    argv.silent ? log4js.getLogger("silent") :
+    argv.pretty ? log4js.getLogger("colour") :
+    log4js.getLogger("default");
+
+const promises = index.argh.parse(process.argv)._.slice(2)
     .map((dir) => index.cwdJoin(dir))
     .map((dir) => timedNuke(dir)
         .then(function (x) {
           const elapsed = x.elapsed.toFixed(12);
-          index.logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
+          logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
         }));
 
 Promise.all(promises)
-    .then(() => void index.logger.info("Done!"))
-    .catch((err) => void index.logger.error(err));
+    .then(() => void logger.info("Done!"))
+    .catch((err) => void logger.error(err));

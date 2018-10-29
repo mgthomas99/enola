@@ -22,8 +22,6 @@ export const argh = yargs
       .describe("silent", "Mute output")
     .alias("help", "h")
     .alias("version", "v");
-export const argv = argh
-    .parse(process.argv);
 
 log4js.configure({
   appenders: {
@@ -55,16 +53,20 @@ log4js.configure({
     }
   },
   categories: {
+    "colour": {
+      appenders: ["colour"],
+      level: log4js.levels.ALL.toString()
+    },
     "default": {
-      appenders: [argv.pretty ? "colour" : "plain"],
-      level: argv.silent
-          ? log4js.levels.OFF.toString()
-          : log4js.levels.ALL.toString()
+      appenders: ["plain"],
+      level: log4js.levels.ALL.toString()
+    },
+    "silent": {
+      appenders: ["plain"],
+      level: log4js.levels.OFF.toString()
     }
   }
 });
-
-export const logger = log4js.getLogger();
 
 process.once("beforeExit", function (ev) {
   log4js.shutdown(function (err) {
