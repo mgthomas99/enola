@@ -26,6 +26,7 @@
     "lint:typescript": "gulp \"lint:typescript\"",
     "lint": "gulp \"lint\"",
     "prepack": "npm-run-all \"clean\" \"build\"",
+    "test:performance": "node \"test/performance/index.js\"",
     "test": "mocha \"test/**/*.spec.js\""
   },
   "devDependencies": {
