@@ -25,7 +25,10 @@ export function timedNuke(dir: string)
 
 const argv = index.argh
     .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
-    .example("nuke \"./node_modules\"", "")
+    .example("$0 \"./node_modules\"", "")
+    .example("$0 \"./dir1\" \"dir2\" \"dir3\"", "")
+    .example("$0 \"file.txt\"", "")
+    .example("$0 \"./node_modules\" -p", "")
     .parse(process.argv);
 
 const logger =
@@ -33,7 +36,8 @@ const logger =
     argv.pretty ? log4js.getLogger("colour") :
     log4js.getLogger("default");
 
-const promises = index.argh.parse(process.argv)._.slice(2)
+const paths = argv._.slice(2);
+const promises = paths
     .map((dir) => index.cwdJoin(dir))
     .map((dir) => timedNuke(dir)
         .then(function (x) {
