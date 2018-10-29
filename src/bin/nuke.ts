@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import * as log4js from "log4js";
-
 import { nuke } from "../system/fs/nuke";
 import * as index from "./index";
 
@@ -26,10 +24,10 @@ export function timedNuke(dir: string)
 const argv = index.argh
     .scriptName("nuke")
     .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
-    .example("$0 \"./node_modules\"", "")
-    .example("$0 \"./dir1\" \"dir2\" \"dir3\"", "")
-    .example("$0 \"file.txt\"", "")
-    .example("$0 \"./node_modules\" -p", "")
+    .example("$0 \"./node_modules\"", "Delete directory \"./node_modules\"")
+    .example("$0 \"./dir1\" \"./dir2\" \"./dir3\"", "Delete directories \"./dir1\", \"dir2\", and \"dir3\"")
+    .example("$0 \"file.txt\"", "Delete file \"file.txt\"")
+    .example("$0 \"./node_modules\" -p", "Delete directory \"./node_modules\", with pretty output")
     .parse(process.argv);
 
 const logger = index.getLogger(argv);
