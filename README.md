@@ -29,8 +29,8 @@ nuke ["path"] [--pretty | -p] [--silent | -s]
 * **--pretty** will allow the command line utility to use colours when
   outputting text. This is helpful when you want more readable output, but it
   may cause problems when printing to terminals that do not support ANSI colour
-  codes.
-* **--silent** will mute all error and output streams.
+  codes. `true` by default.
+* **--silent** will mute all error and output streams. `false` by default.
 
 ## Build & Test
 
