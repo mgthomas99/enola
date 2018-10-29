@@ -3,6 +3,7 @@
   "version": "0.3.5",
   "description": "Very fast directory deletion",
   "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "author": "George Thomas",
   "license": "MIT",
   "keywords": [
