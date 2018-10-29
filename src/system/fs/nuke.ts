@@ -1,6 +1,8 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
+import { statSafe } from "./stats";
+
 /**
  * Asynchronously obliterate the file/directory at the specified path.
  *
@@ -14,12 +16,13 @@ import * as path from "path";
  * @return  {Promise<void>}
  *          A `Promise` which is resolved once the item has been destroyed.
  */
-export async function nuke(dir: string, exists?: boolean)
+export async function nuke(dir: string)
 : (Promise<void>) {
-  if (typeof exists !== "boolean") exists = fs.existsSync(dir);
-  if (! exists) return;
+  const stats = await statSafe(dir);
+  if (typeof stats === "undefined") {
+    return;
+  }
 
-  const stats = await fs.stat(dir);
   if (stats.isDirectory()) {
     const files = await fs.readdir(dir);
     const callbacks = files
@@ -36,7 +39,8 @@ export async function nuke(dir: string, exists?: boolean)
  * Obliterate the file/directory at the specified path.
  *
  * @param   {string}  dir
- *          Path to a file or directory to destroy.
+ *          The path of the file/directory to destroy. The path can either be
+ *          absolute, or relative to the current working directory.
  * @return  {void}
  * @throws  {Error}
  */
