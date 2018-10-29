@@ -31,10 +31,7 @@ const argv = index.argh
     .example("$0 \"./node_modules\" -p", "")
     .parse(process.argv);
 
-const logger =
-    argv.silent ? log4js.getLogger("silent") :
-    argv.pretty ? log4js.getLogger("colour") :
-    log4js.getLogger("default");
+const logger = index.getLogger(argv);
 
 const paths = argv._.slice(2);
 const promises = paths

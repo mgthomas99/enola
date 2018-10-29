@@ -11,6 +11,16 @@ export function cwdJoin(dir: string)
   return path.join(cwd, dir);
 }
 
+export function getLogger(argv?: yargs.Arguments)
+: (log4js.Logger) {
+  const default_logger = log4js.getLogger("default");
+
+  return typeof argv === "undefined" ? default_logger :
+      argv.silent ? log4js.getLogger("silent") :
+      argv.pretty ? log4js.getLogger("colour") :
+      default_logger;
+}
+
 export const argh = yargs
     .boolean("pretty")
       .alias("pretty", "p")
