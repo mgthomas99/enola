@@ -2,10 +2,15 @@ import * as fs from "fs-extra";
 import * as path from "path";
 
 /**
- * Obliterates the file/directory at the specified path.
+ * Asynchronously obliterate the file/directory at the specified path.
  *
  * @param   {string}  path
- *          The absolute path of the file/directory to destroy.
+ *          The path of the file/directory to destroy. The path can either be
+ *          absolute, or relative to the current working directory.
+ * @param   {boolean | undefined} exists
+ *          Optional `boolean` parameter. If `false`, the function will return
+ *          immediately. This parameter is automatically provided internally
+ *          when this function is called recursively.
  * @return  {Promise<void>}
  *          A `Promise` which is resolved once the item has been destroyed.
  */
@@ -28,6 +33,8 @@ export async function nuke(dir: string, exists?: boolean)
 }
 
 /**
+ * Obliterate the file/directory at the specified path.
+ *
  * @param   {string}  dir
  *          Path to a file or directory to destroy.
  * @return  {void}
