@@ -24,6 +24,7 @@ export function timedNuke(dir: string)
 }
 
 const argv = index.argh
+    .scriptName("nuke")
     .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
     .example("$0 \"./node_modules\"", "")
     .example("$0 \"./dir1\" \"dir2\" \"dir3\"", "")
