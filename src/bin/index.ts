@@ -29,26 +29,14 @@ log4js.configure({
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `%x{prefix} %[%p%]\t %m`,
-        tokens: {
-          prefix(ev: log4js.LoggingEvent)
-          : (string) {
-            return chalk.yellow("ENOLA");
-          }
-        }
+        pattern: `%x{${chalk.yellow("ENOLA")}} %[%p%]\t %m`
       }
     },
     "plain": {
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `%x{prefix} %p\t %m`,
-        tokens: {
-          prefix(ev: log4js.LoggingEvent)
-          : (string) {
-            return "ENOLA";
-          }
-        }
+        pattern: `%xENOLA %p\t %m`
       }
     }
   },
