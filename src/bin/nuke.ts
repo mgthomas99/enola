@@ -2,6 +2,7 @@
 
 import { nuke } from "../system/fs/nuke";
 import * as index from "./index";
+import yargs = require("yargs");
 
 export function timedNuke(dir: string)
 : (Promise<{
@@ -21,26 +22,28 @@ export function timedNuke(dir: string)
   });
 }
 
-const argv = index.argh
-    .scriptName("nuke")
-    .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
-    .example("$0 \"./node_modules\"", "Delete directory \"./node_modules\"")
-    .example("$0 \"./dir1\" \"./dir2\" \"./dir3\"", "Delete directories \"./dir1\", \"dir2\", and \"dir3\"")
-    .example("$0 \"file.txt\"", "Delete file \"file.txt\"")
-    .example("$0 \"./node_modules\" -p", "Delete directory \"./node_modules\", with pretty output")
-    .parse(process.argv);
+(function (argv: yargs.Arguments) {
+  const logger = index.getLogger(argv);
+  const paths = argv._.slice(2);
 
-const logger = index.getLogger(argv);
+  const promises = paths
+      .map((dir) => index.cwdJoin(dir))
+      .map((dir) => timedNuke(dir)
+          .then(function (x) {
+            const elapsed = x.elapsed.toFixed(12);
+            logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
+          }));
 
-const paths = argv._.slice(2);
-const promises = paths
-    .map((dir) => index.cwdJoin(dir))
-    .map((dir) => timedNuke(dir)
-        .then(function (x) {
-          const elapsed = x.elapsed.toFixed(12);
-          logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
-        }));
-
-Promise.all(promises)
-    .then(() => void logger.info("Done!"))
-    .catch((err) => void logger.error(err));
+  Promise.all(promises)
+      .then(() => void logger.info("Done!"))
+      .catch((err) => void logger.error(err));
+})(
+  index.argh
+      .scriptName("nuke")
+      .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
+      .example("$0 \"./node_modules\"", "Delete directory \"./node_modules\"")
+      .example("$0 \"./dir1\" \"./dir2\" \"./dir3\"", "Delete directories \"./dir1\", \"dir2\", and \"dir3\"")
+      .example("$0 \"file.txt\"", "Delete file \"file.txt\"")
+      .example("$0 \"./node_modules\" -p", "Delete directory \"./node_modules\", with pretty output")
+      .parse(process.argv)
+);
