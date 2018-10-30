@@ -39,14 +39,14 @@ log4js.configure({
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `{${chalk.yellow("ENOLA")}} %[%p%]\t %m`
+        pattern: `${chalk.yellow("ENOLA")} %[%p%]\t %m`
       }
     },
     "plain": {
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `%xENOLA %p\t %m`
+        pattern: `ENOLA %p\t %m`
       }
     }
   },
