@@ -1,17 +1,17 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
+import { Errors } from "./../errors";
 import * as stat from "./stat";
 
+/**
+ * `nuke` operation information.
+ */
 export type NukeResult = ({
   children: NukeResult[];
   success: boolean;
   path: string;
-  warn?: {
-    errno: number;
-    code: string;
-    message?: string;
-  };
+  warn?: Errors;
 });
 
 /**
@@ -42,11 +42,7 @@ export async function nuke(dir: string)
   });
 
   if (typeof stats === "undefined") {
-    result.warn = ({
-      errno: 1,
-      code: "ENOTEXIST",
-      message: `'${dir}' does not exist. Skipping!`
-    });
+    result.warn = Errors.ResourceNotFound;
   } else if (stats.isDirectory()) {
     const files = (await fs.readdir(dir))
         .map(x => path.join(dir, x));
@@ -88,11 +84,7 @@ export function nukeSync(dir: string)
   });
 
   if (typeof stats === "undefined") {
-    result.warn = ({
-      errno: 1,
-      code: "ENOTEXIST",
-      message: `'${dir}' does not exist. Skipping!`
-    });
+    result.warn = Errors.ResourceNotFound;
   } else if (stats.isDirectory()) {
     const files = fs.readdirSync(dir);
     files
