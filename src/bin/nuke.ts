@@ -1,38 +1,58 @@
 #!/usr/bin/env node
 
-import { nuke } from "../system/fs/nuke";
+import { NukeResult, nuke } from "../system/fs/nuke";
 import * as index from "./index";
-import yargs = require("yargs");
+
+import { cwd } from "./../system/cwd";
 
 export function timedNuke(dir: string)
 : (Promise<{
   elapsed: number;
-  path: string;
+  result: NukeResult;
+  err?: any;
 }>) {
   const start = process.hrtime();
 
-  return nuke(dir).then(() => {
-    const elapsed = process.hrtime(start);
-    const seconds = elapsed[0] + elapsed[1] * 1e-12;
+  return nuke(dir)
+      .then(function (result) {
+        const elapsed = process.hrtime(start);
+        const seconds = elapsed[0] + elapsed[1] * 1e-12;
 
-    return ({
-      elapsed: seconds,
-      path: dir
-    });
-  });
+        return ({
+          elapsed: seconds,
+          warn: result.warn,
+          result,
+        });
+      });
 }
 
-(function (argv: yargs.Arguments) {
+(function (argv) {
   const logger = index.getLogger(argv);
-  const paths = argv._.slice(2);
+  const paths = argv._
+      .slice(2)
+      .map(cwd);
 
   const promises = paths
-      .map((dir) => index.cwdJoin(dir))
-      .map((dir) => timedNuke(dir)
-          .then(function (x) {
-            const elapsed = x.elapsed.toFixed(12);
-            logger.info(`Nuked '${dir}' in ${elapsed} seconds!`);
-          }));
+      .map((x) => ({
+        timestamp: process.hrtime(),
+        promise: nuke(x),
+        path: x
+      }))
+      .map((x) => {
+        function pc(res: NukeResult) {
+          res.children.forEach(pc);
+          if (res.warn) logger.warn(`(${res.warn.code}) ${res.warn.message}`);
+          if (res.success) logger.info("Nuked " + res.path);
+        }
+
+        return x.promise.then((res) => {
+          const elapsed = process.hrtime(x.timestamp);
+          const seconds = elapsed[0] + elapsed[1] * 1e-12;
+          pc(res);
+
+          logger.debug(`took ${seconds.toFixed(12)} seconds`);
+        });
+      });
 
   Promise.all(promises)
       .then(() => void logger.info("Done!"))
