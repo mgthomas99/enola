@@ -1,6 +1,6 @@
 {
   "name": "enola",
-  "version": "0.3.5",
+  "version": "0.4.0",
   "description": "Very fast directory deletion",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
