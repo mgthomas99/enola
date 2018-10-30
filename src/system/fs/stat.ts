@@ -1,5 +1,10 @@
 import * as fs from "fs-extra";
 
+export enum FsItemType {
+  Directory,
+  File
+}
+
 export function statSyncSafe(dir: string)
 : (fs.Stats | undefined) {
   try {
