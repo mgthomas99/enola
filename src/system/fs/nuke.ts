@@ -17,7 +17,9 @@ export type NukeResult = ({
 /**
  * Asynchronously obliterate the file/directory at the specified path.
  *
- * If the path does not exist, this function will immediately return.
+ * If the file/directory does not exist, a warning will be returned. This is
+ * because the operation is invalid, but the desired result of the operation has
+ * been met.
  *
  * @param   {string}  path
  *          The path of the file/directory to destroy. The path can either be
@@ -27,8 +29,8 @@ export type NukeResult = ({
  *          immediately. This parameter is automatically provided internally
  *          when this function is called recursively.
  * @return  {Promise<NukeResult>}
- *          A `Promise` which is resolved once the item has been destroyed, or
- *          rejected if a system error occurs.
+ *          A `Promise` which resolves to a `NukeResult` object containing
+ *          information about the operation once the operation has completed.
  */
 export async function nuke(dir: string)
 : (Promise<NukeResult>) {
@@ -64,12 +66,16 @@ export async function nuke(dir: string)
 /**
  * Obliterate the file/directory at the specified path.
  *
- * If the path does not exist, this function will immediately return.
+ * If the file/directory does not exist, a warning will be returned. This is
+ * because the operation is invalid, but the desired result of the operation has
+ * been met.
  *
  * @param   {string}  dir
  *          The path of the file/directory to destroy. The path can either be
  *          absolute, or relative to the current working directory.
  * @return  {NukeResult}
+ *          A `NukeResult` object containing information about the operation
+ *          once the operation has completed.
  * @throws  {Error}
  */
 export function nukeSync(dir: string)
@@ -81,7 +87,7 @@ export function nukeSync(dir: string)
     path: dir
   });
 
-  if  (typeof stats === "undefined") {
+  if (typeof stats === "undefined") {
     result.warn = ({
       errno: 1,
       code: "ENOTEXIST",
