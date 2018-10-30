@@ -5,6 +5,7 @@ import * as stat from "./stat";
 
 export type NukeResult = ({
   children: NukeResult[];
+  success: boolean;
   path: string;
   warn?: {
     errno: number;
@@ -34,7 +35,8 @@ export async function nuke(dir: string)
   const stats = await stat.statSafe(dir);
   const result: NukeResult = ({
     children: [],
-    path: dir
+    success: true,
+    path: dir,
   });
 
   if (typeof stats === "undefined") {
@@ -75,11 +77,16 @@ export function nukeSync(dir: string)
   const stats = stat.statSyncSafe(dir);
   const result: NukeResult = ({
     children: [],
+    success: true,
     path: dir
   });
 
   if  (typeof stats === "undefined") {
-
+    result.warn = ({
+      errno: 1,
+      code: "ENOTEXIST",
+      message: `'${dir}' does not exist. Skipping!`
+    });
   } else if (stats.isDirectory()) {
     const files = fs.readdirSync(dir);
     files
