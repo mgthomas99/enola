@@ -6,7 +6,7 @@ import * as stat from "./stat";
 export type NukeResult = ({
   children: NukeResult[];
   path: string;
-  err?: {
+  warn?: {
     errno: number;
     code: string;
     message?: string;
@@ -38,7 +38,7 @@ export async function nuke(dir: string)
   });
 
   if (typeof stats === "undefined") {
-    result.err = ({
+    result.warn = ({
       errno: 1,
       code: "ENOTEXIST",
       message: `'${dir}' does not exist. Skipping!`
