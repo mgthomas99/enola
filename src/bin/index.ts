@@ -1,15 +1,8 @@
 #!/usr/bin/env node
 
 import * as log4js from "log4js";
-import * as path from "path";
 import * as yargs from "yargs";
 import chalk from "chalk";
-
-export function cwdJoin(dir: string)
-: (string) {
-  const cwd = process.cwd();
-  return path.join(cwd, dir);
-}
 
 export function getLogger(argv?: yargs.Arguments)
 : (log4js.Logger) {
@@ -39,14 +32,14 @@ log4js.configure({
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `${chalk.yellow("ENOLA")} %[%p%]\t %m`
+        pattern: `${chalk.yellow("ENOLA")} %[%p%]\t%m`
       }
     },
     "plain": {
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `ENOLA %p\t %m`
+        pattern: `ENOLA %p\t%m`
       }
     }
   },
@@ -67,7 +60,9 @@ log4js.configure({
 });
 
 process.once("beforeExit", function (ev) {
+  const logger = getLogger();
+
   log4js.shutdown(function (err) {
-    if (err) throw err;
+    if (err) logger.error(err);
   });
 });
