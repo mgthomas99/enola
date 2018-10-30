@@ -17,7 +17,7 @@
     "rm"
   ],
   "bin": {
-    "enola": "build/index.js",
+    "enola": "build/bin/enola.js",
     "nuke": "build/bin/nuke.js"
   },
   "scripts": {
