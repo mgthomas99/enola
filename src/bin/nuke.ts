@@ -4,12 +4,14 @@ import { NukeResult, nuke } from "../system/fs/nuke";
 import * as index from "./index";
 
 import { cwd } from "./../system/cwd";
+import { Errors } from "./../system/errors";
+import * as error from "./../system/errors";
 
 export function timedNuke(dir: string)
 : (Promise<{
   elapsed: number;
   result: NukeResult;
-  err?: any;
+  err?: Errors;
 }>) {
   const start = process.hrtime();
 
@@ -35,22 +37,35 @@ export function timedNuke(dir: string)
   const promises = paths
       .map((x) => ({
         timestamp: process.hrtime(),
-        promise: nuke(x),
-        path: x
+        path: x,
+        promise: nuke(x)
+      }))
+      .map((x) => x.promise.then((res) => {
+        const elapsed = process.hrtime(x.timestamp);
+
+        return ({
+          elapsed: elapsed[0] + elapsed[1] * 1e-12,
+          timestamp: x.timestamp,
+          path: x.path,
+          result: res
+        });
       }))
       .map((x) => {
-        function pc(res: NukeResult) {
-          res.children.forEach(pc);
-          if (res.warn) logger.warn(`(${res.warn.code}) ${res.warn.message}`);
-          if (res.success) logger.info("Nuked " + res.path);
+        function printChildren(res: NukeResult) {
+          res.children.forEach(printChildren);
+          if (res.warn) {
+            const message = error.getDefaultErrorMessage(res.warn);
+            logger.warn(message);
+          }
+          if (res.success) {
+            logger.info("Nuked " + res.path);
+          }
         }
 
-        return x.promise.then((res) => {
-          const elapsed = process.hrtime(x.timestamp);
-          const seconds = elapsed[0] + elapsed[1] * 1e-12;
-          pc(res);
+        return x.then((res) => {
+          printChildren(res.result);
 
-          logger.debug(`took ${seconds.toFixed(12)} seconds`);
+          logger.debug(`Took ${res.elapsed.toFixed(12)} seconds`);
         });
       });
 
