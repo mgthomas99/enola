@@ -58,7 +58,7 @@ export function timedNuke(dir: string)
             logger.warn(message);
           }
           if (res.success) {
-            logger.info("Nuked " + res.path);
+            logger.info(`Nuked ${res.path}`);
           }
         }
 
