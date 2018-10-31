@@ -30,9 +30,8 @@ export function timedNuke(dir: string)
 
 (function (argv) {
   const logger = index.getLogger(argv);
-  const paths = argv._
-      .slice(2)
-      .map(cwd);
+  const paths = argv._.slice(2)
+      .map(x => cwd(x));
 
   const promises = paths
       .map((x) => ({
