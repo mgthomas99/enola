@@ -1,6 +1,7 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 
+import { ResourceType } from "./../fs/stat";
 import { Errors } from "./../errors";
 import * as stat from "./stat";
 
@@ -14,6 +15,9 @@ export type NukeResult = ({
   stats: {
     /** The path that was requested to be nuked. */
     path: string;
+
+    /** The type of the resource. */
+    type: ResourceType;
   };
 
   /** If the requested resource was a directory, this array will contain the
@@ -51,6 +55,7 @@ export async function nuke(dir: string)
   const stats = await stat.statSafe(dir);
   const result: NukeResult = ({
     stats: {
+      type: stat.getResourceType(stats),
       path: dir
     },
     children: [],
@@ -95,6 +100,7 @@ export function nukeSync(dir: string)
   const stats = stat.statSyncSafe(dir);
   const result: NukeResult = ({
     stats: {
+      type: stat.getResourceType(stats),
       path: dir
     },
     children: [],
