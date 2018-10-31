@@ -8,6 +8,14 @@ import * as stat from "./stat";
  * `nuke` operation information.
  */
 export type NukeResult = ({
+  /**
+   * Information about the resource.
+   */
+  stats: {
+    /** The path that was requested to be nuked. */
+    path: string;
+  };
+
   /** If the requested resource was a directory, this array will contain the
    * result of all nuke operations performed on the directory's items. */
   children: NukeResult[];
@@ -15,9 +23,6 @@ export type NukeResult = ({
   /** A `boolean` whose value is `true` if the operation succeeded (i.e.,
    * produced the desired result) and `false` otherwise. */
   success: boolean;
-
-  /** The path that was requested to be nuked. */
-  path: string;
 
   /** A warning that was produced by the operation, if one occured. */
   warn?: Errors;
@@ -45,9 +50,11 @@ export async function nuke(dir: string)
 : (Promise<NukeResult>) {
   const stats = await stat.statSafe(dir);
   const result: NukeResult = ({
+    stats: {
+      path: dir
+    },
     children: [],
-    success: true,
-    path: dir,
+    success: true
   });
 
   if (typeof stats === "undefined") {
@@ -87,9 +94,11 @@ export function nukeSync(dir: string)
 : (NukeResult | never) {
   const stats = stat.statSyncSafe(dir);
   const result: NukeResult = ({
+    stats: {
+      path: dir
+    },
     children: [],
-    success: true,
-    path: dir
+    success: true
   });
 
   if (typeof stats === "undefined") {
