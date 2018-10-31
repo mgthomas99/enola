@@ -2,7 +2,8 @@ import * as fs from "fs-extra";
 
 export enum ResourceType {
   Directory,
-  File
+  File,
+  Symlink
 }
 
 export function statSyncSafe(dir: string)
