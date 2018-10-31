@@ -8,7 +8,12 @@ export enum Errors {
   /**
    * Access to the resource failed as the resource could not be found.
    */
-  ResourceNotFound
+  ResourceNotFound,
+
+  /**
+   * The resource could not be modified as it is in use by another process.
+   */
+  ResourceLocked
 
 }
 
@@ -24,9 +29,13 @@ export enum Errors {
  *          A message describing the error.
  */
 export function getDefaultErrorMessage(err?: Errors)
-: (string | never) {
+: (string) {
   switch (err) {
-    case Errors.ResourceNotFound: return "The resource could not be found";
-    default: return "Unknown error";
+    case Errors.ResourceNotFound:
+      return "The resource could not be found";
+    case Errors.ResourceLocked:
+      return "The resource is in use";
+    default:
+      return "Unknown error";
   }
 }
