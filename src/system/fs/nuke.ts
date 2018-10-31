@@ -8,9 +8,18 @@ import * as stat from "./stat";
  * `nuke` operation information.
  */
 export type NukeResult = ({
+  /** If the requested resource was a directory, this array will contain the
+   * result of all nuke operations performed on the directory's items. */
   children: NukeResult[];
+
+  /** A `boolean` whose value is `true` if the operation succeeded (i.e.,
+   * produced the desired result) and `false` otherwise. */
   success: boolean;
+
+  /** The path that was requested to be nuked. */
   path: string;
+
+  /** A warning that was produced by the operation, if one occured. */
   warn?: Errors;
 });
 
@@ -50,9 +59,9 @@ export async function nuke(dir: string)
         .map(x => nuke(x));
 
     const children = await Promise.all(callbacks);
-    result.children.push(... children);
-
     await fs.rmdir(dir);
+
+    result.children.push(... children);
   } else if (stats.isFile()) {
     await fs.unlink(dir);
   }
