@@ -1,7 +1,7 @@
 {
   "name": "enola",
   "version": "0.4.3",
-  "description": "Very fast directory deletion",
+  "description": "API and CLI for obliterating files and directories",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
   "author": "George Thomas",
