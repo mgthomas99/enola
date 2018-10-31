@@ -1,6 +1,6 @@
 import * as fs from "fs-extra";
 
-export enum FsItemType {
+export enum ResourceType {
   Directory,
   File
 }
