@@ -3,7 +3,8 @@ import * as fs from "fs-extra";
 export enum ResourceType {
   Directory,
   File,
-  Symlink
+  Symlink,
+  Void
 }
 
 export function statSyncSafe(dir: string)
@@ -24,4 +25,12 @@ export function statSafe(dir: string)
       else accept(stats);
     });
   });
+}
+
+export function getResouceType(stat: fs.Stats)
+: (ResourceType) {
+  return stat.isFile() ? ResourceType.File :
+      stat.isDirectory() ? ResourceType.Directory :
+      stat.isSymbolicLink() ? ResourceType.Symlink :
+      undefined;
 }
