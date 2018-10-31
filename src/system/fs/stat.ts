@@ -27,7 +27,7 @@ export function statSafe(dir: string)
   });
 }
 
-export function getResouceType(stat: fs.Stats)
+export function getResourceType(stat: fs.Stats)
 : (ResourceType) {
   return stat.isFile() ? ResourceType.File :
       stat.isDirectory() ? ResourceType.Directory :
