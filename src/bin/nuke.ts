@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import { NukeResult, nuke } from "../system/fs/nuke";
-import * as index from "./index";
+import * as path from "path";
 
+import { NukeResult, nuke } from "./../system/fs/nuke";
 import { cwd } from "./../system/cwd";
 import { Errors } from "./../system/errors";
 import * as error from "./../system/errors";
+import * as index from "./index";
 
 export function timedNuke(dir: string)
 : (Promise<{
@@ -31,7 +32,9 @@ export function timedNuke(dir: string)
 (function (argv) {
   const logger = index.getLogger(argv);
   const paths = argv._.slice(2)
-      .map(x => cwd(x));
+      .map((x) => path.isAbsolute(x)
+          ? x
+          : cwd(x));
 
   const promises = paths
       .map((x) => ({
