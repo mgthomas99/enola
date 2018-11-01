@@ -1,6 +1,6 @@
 {
   "name": "enola",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "API and CLI for obliterating files and directories",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
