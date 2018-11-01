@@ -29,7 +29,8 @@ export function statSafe(dir: string)
 
 export function getResourceType(stat: fs.Stats)
 : (ResourceType) {
-  return stat.isFile() ? ResourceType.File :
+  return typeof stat === "undefined" ? undefined :
+      stat.isFile() ? ResourceType.File :
       stat.isDirectory() ? ResourceType.Directory :
       stat.isSymbolicLink() ? ResourceType.Symlink :
       undefined;
