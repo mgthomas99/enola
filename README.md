@@ -5,6 +5,7 @@
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
 
 <img src="/.github/icons8-mushroom-cloud-50.png" align="right" draggable="false">
+
 # Enola
 
 [![npm][npm-package-version-shield-url]][npm-package-url]
@@ -36,6 +37,8 @@ nuke ["path"] [--pretty | -p] [--silent | -s]
 * **--silent** will mute all error and output streams. `false` by default.
 
 ### API
+
+Enola's functions can be invoked from code via the [`Promise`]()-based API:
 
 ```ts
 import * as enola from "enola";
