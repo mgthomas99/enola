@@ -4,7 +4,7 @@
 [repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/enola.svg?style=flat-square
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
 
-# Enola
+# Enola <img src="https://img.icons8.com/metro/50/000000/mushroom-cloud.png" style="float:right" draggable="false">
 
 [![npm][npm-package-version-shield-url]][npm-package-url]
 [![GitHub repository license][repository-license-shield-url]][repository-license-url]
@@ -44,3 +44,4 @@ the tests will be outputted to the standard output and error streams.
 ## License
 
 See the `LICENSE` file for license information.
+<a href="https://icons8.com/icon/1268/mushroom-cloud">Mushroom Cloud icon by Icons8</a>
