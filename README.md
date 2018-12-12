@@ -4,7 +4,8 @@
 [repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/enola.svg?style=flat-square
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
 
-# Enola <img src="https://img.icons8.com/metro/50/000000/mushroom-cloud.png" align="right" draggable="false">
+<img src="/.github/icons8-mushroom-cloud-50.png" align="right" draggable="false">
+# Enola
 
 [![npm][npm-package-version-shield-url]][npm-package-url]
 [![GitHub repository license][repository-license-shield-url]][repository-license-url]
@@ -20,6 +21,8 @@ npm install -g enola
 
 The above command will use NPM to install Enola globally.
 
+### Command Line (CLI)
+
 To destroy a file or directory, use the `nuke` command:
 
 ```sh
@@ -31,6 +34,15 @@ nuke ["path"] [--pretty | -p] [--silent | -s]
   may cause problems when printing to terminals that do not support ANSI colour
   codes. `true` by default.
 * **--silent** will mute all error and output streams. `false` by default.
+
+### API
+
+```ts
+import * as enola from "enola";
+
+enola.nuke("path/to/directory")
+    .then(() => console.log("Nuked!"));
+```
 
 ## Build & Test
 
