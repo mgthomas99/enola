@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 
 import * as log4js from "log4js";
-import * as path from "path";
 import * as yargs from "yargs";
 import chalk from "chalk";
 
-export function cwdJoin(dir: string)
-: (string) {
-  const cwd = process.cwd();
-  return path.join(cwd, dir);
+export function getLogger(argv?: yargs.Arguments)
+: (log4js.Logger) {
+  const default_logger = log4js.getLogger("default");
+
+  return typeof argv === "undefined" ? default_logger :
+      argv.silent ? log4js.getLogger("silent") :
+      argv.pretty ? log4js.getLogger("colour") :
+      default_logger;
 }
 
 export const argh = yargs
@@ -22,41 +25,44 @@ export const argh = yargs
       .describe("silent", "Mute output")
     .alias("help", "h")
     .alias("version", "v");
-export const argv = argh
-    .parse(process.argv);
 
 log4js.configure({
   appenders: {
-    "console": {
+    "colour": {
       type: "console",
       layout: {
         type: "pattern",
-        pattern: `%x{prefix} %[%p%]\t %m`,
-        tokens: {
-          prefix(ev: log4js.LoggingEvent)
-          : (string) {
-            return argv.pretty
-                ? chalk.yellow("ENOLA")
-                : "ENOLA";
-          }
-        }
+        pattern: `${chalk.yellow("ENOLA")} %[%p%]\t%m`
+      }
+    },
+    "plain": {
+      type: "console",
+      layout: {
+        type: "pattern",
+        pattern: `ENOLA %p\t%m`
       }
     }
   },
   categories: {
+    "colour": {
+      appenders: ["colour"],
+      level: log4js.levels.ALL.toString()
+    },
     "default": {
-      appenders: ["console"],
-      level: argv.silent
-          ? log4js.levels.OFF.toString()
-          : log4js.levels.ALL.toString()
+      appenders: ["plain"],
+      level: log4js.levels.ALL.toString()
+    },
+    "silent": {
+      appenders: ["plain"],
+      level: log4js.levels.OFF.toString()
     }
   }
 });
 
-export const logger = log4js.getLogger();
-
 process.once("beforeExit", function (ev) {
+  const logger = getLogger();
+
   log4js.shutdown(function (err) {
-    if (err) throw err;
+    if (err) logger.error(err);
   });
 });

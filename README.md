@@ -1,7 +1,7 @@
 [github-repository-url]: https://github.com/mgthomas99/enola
 [npm-package-url]: http://npmjs.com/package/enola
 [npm-package-version-shield-url]: https://img.shields.io/npm/v/enola.svg
-[repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/css-project.svg?style=flat-square
+[repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/enola.svg?style=flat-square
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
 
 # Enola
@@ -29,8 +29,8 @@ nuke ["path"] [--pretty | -p] [--silent | -s]
 * **--pretty** will allow the command line utility to use colours when
   outputting text. This is helpful when you want more readable output, but it
   may cause problems when printing to terminals that do not support ANSI colour
-  codes.
-* **--silent** will mute all error and output streams.
+  codes. `true` by default.
+* **--silent** will mute all error and output streams. `false` by default.
 
 ## Build & Test
 

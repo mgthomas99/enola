@@ -1,8 +1,9 @@
 {
   "name": "enola",
-  "version": "0.3.4",
-  "description": "Very fast directory deletion",
+  "version": "0.4.5",
+  "description": "API and CLI for obliterating files and directories",
   "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "author": "George Thomas",
   "license": "MIT",
   "keywords": [
@@ -16,7 +17,7 @@
     "rm"
   ],
   "bin": {
-    "enola": "build/index.js",
+    "enola": "build/bin/enola.js",
     "nuke": "build/bin/nuke.js"
   },
   "scripts": {
@@ -25,7 +26,8 @@
     "lint:javascript": "gulp \"lint:javascript\"",
     "lint:typescript": "gulp \"lint:typescript\"",
     "lint": "gulp \"lint\"",
-    "prepack": "npm-run-all \"clean\" \"build\"",
+    "prepack": "npm-run-all -s \"clean\" \"build\"",
+    "test:performance": "node \"test/performance/index.js\"",
     "test": "mocha \"test/**/*.spec.js\""
   },
   "devDependencies": {

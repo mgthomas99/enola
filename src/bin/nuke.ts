@@ -1,34 +1,86 @@
 #!/usr/bin/env node
 
-import { nuke } from "../system/fs/nuke";
+import * as path from "path";
+
+import { NukeResult, nuke } from "./../system/fs/nuke";
+import { cwd } from "./../system/cwd";
+import { Errors } from "./../system/errors";
+import * as error from "./../system/errors";
 import * as index from "./index";
 
 export function timedNuke(dir: string)
 : (Promise<{
   elapsed: number;
-  path: string;
+  result: NukeResult;
+  err?: Errors;
 }>) {
   const start = process.hrtime();
 
-  return nuke(dir).then(() => {
-    const elapsed = process.hrtime(start);
-    const seconds = elapsed[0] + elapsed[1] * 1e-12;
+  return nuke(dir)
+      .then(function (result) {
+        const elapsed = process.hrtime(start);
+        const seconds = elapsed[0] + elapsed[1] * 1e-12;
 
-    return ({
-      elapsed: seconds,
-      path: dir
-    });
-  });
+        return ({
+          elapsed: seconds,
+          warn: result.warn,
+          result,
+        });
+      });
 }
 
-const promises = index.argv._.slice(2)
-    .map((dir) => index.cwdJoin(dir))
-    .map((dir) => timedNuke(dir)
-        .then(function (x) {
-          const elapsed = x.elapsed.toFixed(12);
-          index.logger.info(`Nuked ${dir} in ${elapsed} seconds!`);
-        }));
+(function (argv) {
+  const logger = index.getLogger(argv);
+  const paths = argv._.slice(2)
+      .map((x) => path.isAbsolute(x)
+          ? x
+          : cwd(x));
 
-Promise.all(promises)
-    .then(() => void index.logger.info("Done!"))
-    .catch((err) => void index.logger.error(err));
+  const promises = paths
+      .map((x) => ({
+        timestamp: process.hrtime(),
+        path: x,
+        promise: nuke(x)
+      }))
+      .map((x) => x.promise.then((res) => {
+        const elapsed = process.hrtime(x.timestamp);
+
+        return ({
+          elapsed: elapsed[0] + elapsed[1] * 1e-12,
+          timestamp: x.timestamp,
+          path: x.path,
+          result: res
+        });
+      }))
+      .map((x) => {
+        function printChildren(res: NukeResult) {
+          res.children.forEach(printChildren);
+          if (res.warn) {
+            const message = error.getDefaultErrorMessage(res.warn);
+            logger.warn(message);
+          }
+          if (res.success) {
+            logger.info(`Nuked ${res.stats.path}`);
+          }
+        }
+
+        return x.then((res) => {
+          printChildren(res.result);
+
+          logger.debug(`Took ${res.elapsed.toFixed(12)} seconds`);
+        });
+      });
+
+  Promise.all(promises)
+      .then(() => void logger.info("Done!"))
+      .catch((err) => void logger.error(err));
+})(
+  index.argh
+      .scriptName("nuke")
+      .usage("$0 <\"path\"> [\"path2\" [... \"pathN\"]]")
+      .example("$0 \"./node_modules\"", "Delete directory \"./node_modules\"")
+      .example("$0 \"./dir1\" \"./dir2\" \"./dir3\"", "Delete directories \"./dir1\", \"dir2\", and \"dir3\"")
+      .example("$0 \"file.txt\"", "Delete file \"file.txt\"")
+      .example("$0 \"./node_modules\" -p", "Delete directory \"./node_modules\", with pretty output")
+      .parse(process.argv)
+);
