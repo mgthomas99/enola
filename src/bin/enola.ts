@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as index from "./index";
 
 (function (argv) {
