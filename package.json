@@ -2,10 +2,18 @@
   "name": "enola",
   "version": "0.4.5",
   "description": "API and CLI for obliterating files and directories",
-  "main": "build/index.js",
-  "typings": "build/index.d.ts",
-  "author": "George Thomas",
-  "license": "MIT",
+  "homepage": "https://github.com/mgthomas99/enola",
+  "author": {
+    "name": "George Thomas",
+    "url": "https://mgthomas99.github.io"
+  },
+  "bugs": {
+    "url": "https://github.com/mgthomas99/enola/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mgthomas99/enola"
+  },
   "keywords": [
     "delete",
     "del",
@@ -16,6 +24,9 @@
     "rmdir",
     "rm"
   ],
+  "license": "MIT",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "bin": {
     "enola": "build/bin/enola.js",
     "nuke": "build/bin/nuke.js"
