@@ -1,8 +1,10 @@
 [github-repository-url]: https://github.com/mgthomas99/enola
 [npm-package-url]: http://npmjs.com/package/enola
-[npm-package-version-shield-url]: https://img.shields.io/npm/v/enola.svg
+[npm-package-version-shield-url]: https://img.shields.io/npm/v/enola.svg?style=flat-square
 [repository-license-shield-url]: https://img.shields.io/github/license/mgthomas99/enola.svg?style=flat-square
 [repository-license-url]: https://github.com/mgthomas99/enola/blob/master/LICENSE
+
+[doc-promises-url]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
 <img src="/.github/icons8-mushroom-cloud-50.png" align="right" draggable="false">
 
@@ -38,7 +40,8 @@ nuke ["path"] [--pretty | -p] [--silent | -s]
 
 ### API
 
-Enola's functions can be invoked from code via the [`Promise`]()-based API:
+Enola's functions can be invoked from code via the [`Promise`][doc-promises-url]
+-based API:
 
 ```ts
 import * as enola from "enola";
