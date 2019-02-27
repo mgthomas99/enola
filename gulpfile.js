@@ -34,5 +34,5 @@ gulp.task("lint:typescript", function () {
       }));
 });
 
-gulp.task("lint", ["lint:javascript", "lint:typescript"]);
-gulp.task("default", ["build"]);
+gulp.task("lint", gulp.parallel("lint:javascript", "lint:typescript"));
+gulp.task("default", gulp.parallel("build"));
